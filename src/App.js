@@ -1,19 +1,48 @@
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
 import React, { useEffect } from 'react'
-import { SafeAreaView } from 'react-native'
+import { enableScreens } from 'react-native-screens'
+import { ThemeProvider } from 'styled-components/native'
 
-import { Text } from './components/Text'
-import { useUserStore } from './store/user'
+import { features } from '@/config/features'
+import { theme } from '@/config/theme'
+import { Welcome } from '@/features/Welcome'
+import { useUserStore } from '@/store/user'
+
+const Tabs = createBottomTabNavigator()
+const HomeNav = createStackNavigator()
+
+enableScreens()
+
+const Blank = () => <></>
+
+const HomeStack = () => {
+  return (
+    <HomeNav.Navigator>
+      {features.WelcomeScreen && (
+        <HomeNav.Screen
+          name="Welcome"
+          component={Welcome}
+          options={{ headerShown: false }}
+        />
+      )}
+      <HomeNav.Screen
+        name="Fallback"
+        options={{ headerShown: false }}
+        component={Blank}
+      ></HomeNav.Screen>
+    </HomeNav.Navigator>
+  )
+}
 
 const App = () => {
-  const user = useUserStore(x => x.user)
   const populateUser = useUserStore(x => x.populate)
 
   useEffect(() => {
     let mounted = true
 
-    if (mounted) {
-      populateUser()
-    }
+    if (mounted) populateUser()
 
     return () => {
       mounted = false
@@ -21,12 +50,13 @@ const App = () => {
   }, [])
 
   return (
-    <SafeAreaView>
-      <Text m={3}>React Native Starter</Text>
-      <Text mx={3} fontSize={14} color={'dodgerblue'}>
-        hello {user.name}
-      </Text>
-    </SafeAreaView>
+    <NavigationContainer theme={theme}>
+      <ThemeProvider theme={theme}>
+        <Tabs.Navigator screenOptions={{ headerShown: false }}>
+          <Tabs.Screen name="Home" component={HomeStack} />
+        </Tabs.Navigator>
+      </ThemeProvider>
+    </NavigationContainer>
   )
 }
 
