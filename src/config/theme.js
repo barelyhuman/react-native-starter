@@ -47,8 +47,10 @@ export const theme = {
   dark: false,
   colors: {
     ...DefaultTheme.colors,
-    primary: palette.blue['500'],
-    accent: palette.blue['500'],
+    primary: palette.black,
+    accent: palette.black,
+    black: palette.black,
+    white: palette.white,
 
     base: palette.white,
     surface: palette.gray[50],

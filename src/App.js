@@ -5,6 +5,7 @@ import React, { useEffect } from 'react'
 import { enableScreens } from 'react-native-screens'
 import { ThemeProvider } from 'styled-components/native'
 
+import Icon from '@/components/Icon'
 import { features } from '@/config/features'
 import { theme } from '@/config/theme'
 import { Welcome } from '@/features/Welcome'
@@ -52,7 +53,16 @@ const App = () => {
   return (
     <NavigationContainer theme={theme}>
       <ThemeProvider theme={theme}>
-        <Tabs.Navigator screenOptions={{ headerShown: false }}>
+        <Tabs.Navigator
+          screenOptions={({ route }) => ({
+            headerShown: false,
+            tabBarIcon: ({ focused, color, size }) => {
+              return <Icon name={route.name} size={size} color={color} />
+            },
+            tabBarActiveTintColor: theme.colors.black,
+            tabBarInactiveTintColor: theme.colors.subtle,
+          })}
+        >
           <Tabs.Screen name="Home" component={HomeStack} />
         </Tabs.Navigator>
       </ThemeProvider>
